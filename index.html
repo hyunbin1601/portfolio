@@ -19,7 +19,7 @@
 
 <style>
 /* ============================================================
-   夢境 — palette tokens. Single committed light world.
+   夢境 — 단일 라이트 팔레트. 파스텔은 면으로만, 글자는 먹빛.
    ============================================================ */
 :root {
   color-scheme: light;
@@ -47,32 +47,30 @@
 
   --rail: 264px;
   --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px;
-  --s5: 32px; --s6: 48px; --s7: 64px; --s8: 96px; --s9: 128px;
+  --s5: 32px; --s6: 48px; --s7: 64px; --s8: 96px;
 }
 
 * { box-sizing: border-box; }
 
 /* 히어로 워시가 의도적으로 화면 밖으로 흘러나간다. hidden은 스크롤 컨테이너를
    만들어 레일의 sticky를 깨므로, 스크롤 컨테이너를 만들지 않는 clip을 쓴다. */
-html { overflow-x: clip; }
+html { overflow-x: clip; scroll-behavior: smooth; }
 
 body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
-  font-weight: 400;
   font-size: 15.5px;
   line-height: 1.62;
   letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
-  /* 한글은 기본값(line-break:auto)에서 음절 단위로 끊긴다. 어절 단위로 끊도록 고정 */
+  /* 한글은 기본값에서 음절 단위로 끊긴다. 어절 단위로 끊도록 고정 */
   word-break: keep-all;
   overflow-wrap: break-word;
 }
 
-/* grain — kills the plastic flatness of large pastel fields */
-body::before {
+body::before { /* 그레인 — 넓은 파스텔 면의 플라스틱 느낌을 없앤다 */
   content: "";
   position: fixed; inset: 0;
   pointer-events: none; z-index: 9;
@@ -81,13 +79,11 @@ body::before {
 }
 
 a { color: var(--accent-deep); text-decoration: none; }
-a:focus-visible, [tabindex]:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 /* ============================================================
-   shell — asymmetric rail + flow
+   shell — 비대칭 레일 + 본문
    ============================================================ */
 .shell {
   display: grid;
@@ -100,15 +96,13 @@ a:focus-visible, [tabindex]:focus-visible {
   z-index: 1;
 }
 
-/* ---- left rail ---- */
+/* ---- 레일 ---- */
 .rail { position: sticky; top: var(--s7); align-self: start; }
 
 .portrait {
-  display: block;
-  width: 100%;
+  display: block; width: 100%;
   aspect-ratio: 4 / 5;
-  object-fit: cover;
-  object-position: 50% 26%;
+  object-fit: cover; object-position: 50% 26%;
   border: 1px solid var(--line);
   background: var(--fairy);
   margin-bottom: var(--s4);
@@ -118,31 +112,19 @@ a:focus-visible, [tabindex]:focus-visible {
 .rail .mark {
   font-family: var(--serif);
   font-size: 34px; font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
+  letter-spacing: -0.03em; line-height: 1.05;
   margin: 0;
 }
 .rail .mark-en {
   display: block;
   font-family: var(--mono);
   font-size: 10.5px; font-weight: 500;
-  letter-spacing: .19em;
-  text-transform: uppercase;
+  letter-spacing: .19em; text-transform: uppercase;
   color: var(--ink-faint);
   margin-top: var(--s2);
 }
-.rail .pill {
-  height: 5px; width: 100%;
-  background: var(--grad);
-  border-radius: 999px;
-  margin: var(--s4) 0 var(--s4);
-}
-.rail .role {
-  font-size: 13.5px;
-  color: var(--ink-soft);
-  line-height: 1.55;
-  margin: 0 0 var(--s5);
-}
+.rail .pill { height: 5px; width: 100%; background: var(--grad); border-radius: 999px; margin: var(--s4) 0; }
+.rail .role { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 var(--s5); }
 .rail .role b { color: var(--ink); font-weight: 600; }
 
 .nav { display: flex; flex-direction: column; gap: 1px; margin-bottom: var(--s5); }
@@ -150,20 +132,25 @@ a:focus-visible, [tabindex]:focus-visible {
   font-family: var(--mono);
   font-size: 11.5px; letter-spacing: .07em;
   color: var(--ink-soft);
-  padding: 6px 0;
-  border-bottom: 1px solid transparent;
+  padding: 6px 0 6px 9px;
+  border-left: 2px solid transparent;
   display: flex; justify-content: space-between; align-items: center;
-  transition: color .18s, border-color .18s;
+  transition: color .18s, border-color .18s, background .18s;
 }
-.nav a span { opacity: 0; transform: translateX(-4px); transition: opacity .18s, transform .18s; }
-.nav a:hover { color: var(--accent-deep); border-bottom-color: var(--line); }
-.nav a:hover span { opacity: 1; transform: translateX(0); }
+.nav a i { font-style: normal; opacity: 0; transform: translateX(-4px); transition: opacity .18s, transform .18s; }
+.nav a:hover { color: var(--accent-deep); }
+.nav a:hover i { opacity: 1; transform: none; }
+.nav a.active {                       /* 긴 페이지에서 현재 위치를 알려준다 */
+  color: var(--ink); font-weight: 500;
+  border-left-color: var(--accent);
+  background: linear-gradient(90deg, var(--fairy), transparent 88%);
+}
+.nav a.active i { opacity: 1; transform: none; color: var(--accent); }
 
 .rail .contact { display: flex; flex-direction: column; gap: 5px; }
-.rail .contact a, .rail .contact span {
+.rail .contact a {
   font-family: var(--mono); font-size: 11px;
-  color: var(--ink-soft); letter-spacing: .02em;
-  word-break: break-all;
+  color: var(--ink-soft); letter-spacing: .02em; word-break: break-all;
 }
 .rail .contact a:hover { color: var(--accent-deep); }
 
@@ -171,7 +158,7 @@ a:focus-visible, [tabindex]:focus-visible {
    hero
    ============================================================ */
 .hero { position: relative; padding-bottom: var(--s8); }
-.hero::after { /* a restrained wash, not a cloud — bleeds off-canvas */
+.hero::after {
   content: "";
   position: absolute; top: -170px; right: -16vw;
   width: 46vw; height: 380px;
@@ -192,56 +179,44 @@ a:focus-visible, [tabindex]:focus-visible {
   font-family: var(--serif);
   font-weight: 700;
   font-size: clamp(34px, 5.5vw, 62px);
-  line-height: 1.2;
-  letter-spacing: -0.03em;
+  line-height: 1.2; letter-spacing: -0.03em;
   text-wrap: balance;
   margin: 0 0 var(--s5);
-  max-width: none;   /* 23ch ≈ 한글 11.5자였다 — 21자 제목이 강제로 쪼개졌음 */
 }
-.thesis em {
-  font-style: normal;
-  position: relative;
-  white-space: nowrap;
-}
-.thesis em::after { /* one quiet rule, not three gradients */
+.thesis em { font-style: normal; position: relative; white-space: nowrap; }
+.thesis em::after {
   content: "";
   position: absolute; left: 0; right: 0; bottom: .07em;
-  height: 2px;
-  background: var(--accent);
-  z-index: -1;
+  height: 2px; background: var(--accent); z-index: -1;
 }
 
-.deck {
-  font-size: 16.5px;
-  color: var(--ink-soft);
-  max-width: 34em;   /* 한글 34자 ≈ 편한 1행 길이 */
-  margin: 0 0 var(--s6);
-}
+.deck { font-size: 16.5px; color: var(--ink-soft); max-width: 34em; margin: 0 0 var(--s5); }
 .deck b { color: var(--ink); font-weight: 600; }
 
-/* metric strip */
+.hero-cta { display: flex; flex-wrap: wrap; gap: var(--s4); margin: 0 0 var(--s6); }
+.hero-cta a {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .05em;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+  transition: border-color .18s;
+}
+.hero-cta a:hover { border-bottom-color: var(--accent); }
+
 .metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(178px, 100%), 1fr));
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
+  gap: 1px; background: var(--line); border: 1px solid var(--line);
 }
-.metric { background: var(--card); padding: var(--s4) var(--s4) var(--s4); }
+.metric { background: var(--card); padding: var(--s4); }
 .metric .lab {
   font-family: var(--mono);
   font-size: 10px; letter-spacing: .11em; text-transform: uppercase;
-  color: var(--ink-faint);
-  display: block; margin-bottom: var(--s3);
+  color: var(--ink-faint); display: block; margin-bottom: var(--s3);
 }
 .metric .val {
-  font-family: var(--mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 30px; font-weight: 600;
-  letter-spacing: -0.04em;
-  color: var(--ink);
-  display: flex; align-items: baseline; gap: 4px;
-  line-height: 1.05;
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 30px; font-weight: 600; letter-spacing: -0.04em;
+  color: var(--ink); display: flex; align-items: baseline; gap: 4px; line-height: 1.05;
 }
 .metric .val .unit { font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--ink-soft); letter-spacing: 0; }
 .metric .den { font-size: 12px; color: var(--ink-soft); margin-top: var(--s2); line-height: 1.45; }
@@ -255,125 +230,100 @@ section { padding-block: var(--s8) 0; scroll-margin-top: var(--s5); }
 .sec-head .num {
   font-family: var(--mono);
   font-size: 10.5px; letter-spacing: .2em;
-  color: var(--accent);
-  display: block; margin-bottom: var(--s3);
+  color: var(--accent); display: block; margin-bottom: var(--s3);
 }
 .sec-head h2 {
   font-family: var(--serif);
   font-size: clamp(25px, 3vw, 34px);
   font-weight: 700; letter-spacing: -0.03em;
-  line-height: 1.24; margin: 0;
-  text-wrap: balance;
+  line-height: 1.24; margin: 0; text-wrap: balance;
 }
-.sec-head p {
-  font-size: 15px; color: var(--ink-soft);
-  max-width: 36em; margin: var(--s3) 0 0;
-}
+.sec-head p { font-size: 15px; color: var(--ink-soft); max-width: 36em; margin: var(--s3) 0 0; }
 .rule { height: 1px; background: var(--line); margin-top: var(--s4); }
 
-/* ---- way: a real 4-step causal chain, so numbering earns its place ---- */
-.way { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
-.step {
-  background: var(--card);
-  display: grid;
-  grid-template-columns: 62px minmax(0,1fr);
-  gap: var(--s4);
-  padding: var(--s4) var(--s5) var(--s4) var(--s4);
-  align-items: start;
-}
-.step .idx {
-  font-family: var(--mono);
-  font-size: 11px; font-weight: 600; letter-spacing: .06em;
-  color: var(--accent-deep);
-  padding-top: 4px;
-}
-.step h3 { font-size: 16px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.02em; }
-.step p { margin: 0; font-size: 14px; color: var(--ink-soft); }
-.step p .ev { color: var(--ink); }
-
-/* ---- capability: AI / 정보보안 / 개발 / 기획·PM ---- */
+/* ---- 역량 4축 ---- */
 .triad { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(336px, 100%), 1fr)); gap: var(--s4); }
 .verb {
-  background: var(--card);
-  border: 1px solid var(--line);
-  padding: 0 var(--s5) var(--s5);
-  position: relative;
+  background: var(--card); border: 1px solid var(--line);
+  padding: 0 var(--s5) var(--s5); position: relative;
 }
 .verb::before { content: ""; display: block; height: 3px; margin: 0 calc(-1 * var(--s5)) var(--s5); background: var(--accent); }
 .verb:nth-child(2)::before { background: var(--lilac); }
 .verb:nth-child(3)::before { background: var(--sky); }
 .verb:nth-child(4)::before { background: var(--candy); }
-.verb h3 {
-  font-family: var(--serif);
-  font-size: 25px; font-weight: 700; letter-spacing: -0.03em;
-  margin: 0 0 var(--s1);
-}
+.verb h3 { font-family: var(--serif); font-size: 25px; font-weight: 700; letter-spacing: -0.03em; margin: 0 0 var(--s1); }
 .verb .sub { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 var(--s3); }
 .verb .def { font-size: 13.5px; color: var(--ink); margin: 0 0 var(--s4); padding-bottom: var(--s3); border-bottom: 1px solid var(--line-soft); }
-.verb ul { margin: 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: var(--s3); }
+.verb ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--s3); }
 .verb li { font-size: 14px; color: var(--ink-soft); padding-left: var(--s3); border-left: 2px solid var(--fairy); }
 .verb li b { color: var(--ink); font-weight: 600; }
+.verb li:first-child {                /* 각 축의 1순위 근거를 키운다 */
+  font-size: 15px; color: var(--ink);
+  border-left-color: var(--accent);
+  border-left-width: 3px;
+}
+.verb:nth-child(2) li:first-child { border-left-color: var(--lilac); }
+.verb:nth-child(3) li:first-child { border-left-color: var(--sky); }
+.verb:nth-child(4) li:first-child { border-left-color: var(--candy); }
 
-/* ---- project cards ---- */
+/* ---- 프로젝트 ---- */
 .projects { display: flex; flex-direction: column; gap: var(--s4); }
 .proj {
-  background: var(--card);
-  border: 1px solid var(--line);
-  padding: var(--s5);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 232px;
-  gap: var(--s6);
+  background: var(--card); border: 1px solid var(--line); padding: var(--s5);
+  display: grid; grid-template-columns: minmax(0, 1fr) 232px; gap: var(--s6);
 }
 .proj > div:first-child { min-width: 0; }
 .proj h3 { font-size: 19px; font-weight: 600; letter-spacing: -0.028em; margin: 0 0 var(--s2); }
-.proj .meta { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); letter-spacing: .04em; margin: 0 0 var(--s4); }
+.proj .meta { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); letter-spacing: .04em; margin: 0 0 var(--s3); }
 .proj p { margin: 0 0 var(--s3); font-size: 14.5px; color: var(--ink-soft); }
 .proj p:last-child { margin-bottom: 0; }
 .proj p b { color: var(--ink); font-weight: 600; }
-.proj .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: var(--s4); }
-.tag {
-  font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em;
-  color: var(--ink-soft);
-  border: 1px solid var(--line);
-  background: transparent;
-  padding: 3px 8px;
+
+/* 역량 색을 프로젝트에서 다시 쓴다 — 그래야 색이 의미를 갖는다 */
+.doms { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 var(--s4); }
+.dom {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .06em;
+  color: var(--ink); padding: 2px 8px; border: 1px solid;
 }
+.dom.ai   { background: rgba(113,129,200,.14); border-color: var(--accent); }
+.dom.sec  { background: rgba(171,171,220,.18); border-color: var(--lilac); }
+.dom.dev  { background: rgba(183,211,244,.24); border-color: var(--sky); }
+.dom.plan { background: rgba(241,207,237,.26); border-color: var(--candy); }
+
 .side { border-left: 1px solid var(--line-soft); padding-left: var(--s5); }
 .side dl { margin: 0; display: flex; flex-direction: column; gap: var(--s4); }
 .side dt { font-family: var(--mono); font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 3px; }
 .side dd {
-  margin: 0;
-  font-family: var(--mono); font-variant-numeric: tabular-nums;
-  font-size: 15px; font-weight: 500; color: var(--ink);
-  letter-spacing: -0.02em;
+  margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 15px; font-weight: 500; color: var(--ink); letter-spacing: -0.02em;
 }
 .side dd small { display: block; font-family: var(--sans); font-size: 11.5px; font-weight: 400; color: var(--ink-soft); letter-spacing: 0; margin-top: 2px; }
-.candid {
-  margin-top: var(--s4);
-  border-left: 2px solid var(--candy);
-  padding: var(--s2) 0 var(--s2) var(--s3);
-  font-size: 13px; color: var(--ink-soft);
-}
+.candid { margin-top: var(--s4); border-left: 2px solid var(--candy); padding: var(--s2) 0 var(--s2) var(--s3); font-size: 13px; color: var(--ink-soft); }
 .candid b { color: var(--ink); font-weight: 600; }
 
-/* ---- timeline ---- */
-.tl { display: grid; gap: 0; }
-.tl-row {
-  display: grid;
-  grid-template-columns: 150px minmax(0,1fr) 128px;
-  gap: var(--s4);
-  padding: var(--s3) 0;
-  border-top: 1px solid var(--line-soft);
-  align-items: baseline;
+/* ---- 표 (그 외 프로젝트 · 타임라인) ---- */
+.tbl-wrap { overflow-x: auto; }
+table.mini { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.mini th, table.mini td { text-align: left; vertical-align: top; padding: 9px 12px 9px 0; border-top: 1px solid var(--line-soft); }
+table.mini thead th {
+  border-top: 0; border-bottom: 1px solid var(--line);
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--ink-faint); font-weight: 600;
+  padding-bottom: var(--s2);
 }
-.tl-row:last-child { border-bottom: 1px solid var(--line-soft); }
-.tl-row .when { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 11.5px; color: var(--ink-faint); letter-spacing: .01em; }
-.tl-row .what { font-size: 14.5px; }
-.tl-row .what b { font-weight: 600; }
-.tl-row .what em { font-style: normal; color: var(--ink-soft); display: block; font-size: 13px; margin-top: 2px; }
-.tl-row .who { font-family: var(--mono); font-size: 10.5px; color: var(--accent-deep); letter-spacing: .05em; text-align: right; }
+table.mini td:first-child { font-weight: 600; color: var(--ink); white-space: nowrap; }
+table.mini .when { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 11.5px; color: var(--ink-faint); white-space: nowrap; }
+table.mini td { color: var(--ink-soft); }
 
-/* ---- skills ---- */
+/* ---- 일하는 방식 ---- */
+.way { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.step { background: var(--card); display: grid; grid-template-columns: 62px minmax(0,1fr); gap: var(--s4); padding: var(--s4) var(--s5) var(--s4) var(--s4); align-items: start; }
+.step .idx { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .06em; color: var(--accent-deep); padding-top: 4px; }
+.step h3 { font-size: 16px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.02em; }
+.step p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+.step p .ev { color: var(--ink); }
+
+/* ---- 기술 ---- */
 .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(268px, 100%), 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
 .skill { background: var(--card); padding: var(--s4) var(--s5) var(--s5); }
 .skill h3 { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-deep); margin: 0 0 var(--s3); font-weight: 600; }
@@ -381,67 +331,54 @@ section { padding-block: var(--s8) 0; scroll-margin-top: var(--s5); }
 .skill li { font-size: 13.5px; color: var(--ink-soft); }
 .skill li b { color: var(--ink); font-weight: 500; }
 
-/* ---- closing ---- */
-.closing {
-  margin-top: var(--s8);
-  border-top: 1px solid var(--line);
-  padding-top: var(--s6);
-}
+/* ---- 마무리 ---- */
+.closing { margin-top: var(--s8); border-top: 1px solid var(--line); padding-top: var(--s6); }
 .closing blockquote {
   font-family: var(--serif);
   font-size: clamp(19px, 2.3vw, 26px);
-  font-weight: 400; line-height: 1.55; letter-spacing: -0.035em;
-  margin: 0 0 var(--s4); max-width: 24em;   /* 36ch ≈ 한글 18자였다 */
-  text-wrap: pretty;   /* balance는 줄 길이를 맞추려 엉뚱한 곳에서 끊는다 */
+  font-weight: 400; line-height: 1.55; letter-spacing: -0.03em;
+  margin: 0 0 var(--s4); max-width: 24em; text-wrap: pretty;
 }
 .closing cite { font-family: var(--mono); font-size: 11px; font-style: normal; color: var(--ink-faint); letter-spacing: .06em; }
 
 .links { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s6); }
 .links a {
   font-family: var(--mono); font-size: 11.5px; letter-spacing: .05em;
-  border: 1px solid var(--line);
-  background: var(--card);
-  padding: 8px 13px;
-  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line); background: var(--card);
+  padding: 8px 13px; display: inline-flex; align-items: center; gap: 7px;
   transition: border-color .18s, background .18s;
 }
 .links a:hover { border-color: var(--accent); background: var(--fairy); }
 .links a i { font-style: normal; color: var(--accent); }
 
-footer {
-  margin-top: var(--s7);
-  font-family: var(--mono); font-size: 10.5px;
-  color: var(--ink-faint); letter-spacing: .05em;
-  line-height: 1.7;
-}
+footer { margin-top: var(--s7); font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); letter-spacing: .05em; }
 
 /* ============================================================
-   motion — one orchestrated load, then quiet scroll reveals
+   motion
    ============================================================ */
 @media (prefers-reduced-motion: no-preference) {
   .rise { opacity: 0; transform: translateY(16px); }
   .rise.in { opacity: 1; transform: none; transition: opacity .7s cubic-bezier(.22,.7,.28,1), transform .7s cubic-bezier(.22,.7,.28,1); }
-  .hero .eyebrow, .hero .thesis, .hero .deck, .hero .metrics { opacity: 0; animation: up .85s cubic-bezier(.22,.7,.28,1) forwards; }
-  .hero .eyebrow { animation-delay: .05s; }
-  .hero .thesis  { animation-delay: .16s; }
-  .hero .deck    { animation-delay: .30s; }
-  .hero .metrics { animation-delay: .42s; }
+  .hero .eyebrow, .hero .thesis, .hero .deck, .hero .hero-cta, .hero .metrics { opacity: 0; animation: up .85s cubic-bezier(.22,.7,.28,1) forwards; }
+  .hero .eyebrow  { animation-delay: .05s; }
+  .hero .thesis   { animation-delay: .16s; }
+  .hero .deck     { animation-delay: .30s; }
+  .hero .hero-cta { animation-delay: .38s; }
+  .hero .metrics  { animation-delay: .46s; }
   @keyframes up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 }
 
 /* ============================================================
-   print — same page, submittable as PDF (Ctrl+P → A4)
+   print — 같은 페이지를 A4 PDF로
    ============================================================ */
 @media print {
   @page { size: A4; margin: 14mm 15mm; }
+  html { overflow: visible; }
   body { background: #fff; font-size: 9.4pt; line-height: 1.5; }
-  body::before, .hero::after { display: none; }
-  .shell {
-    display: block; max-width: none; padding: 0;
-  }
+  body::before, .hero::after, .nav, .links, .hero-cta { display: none; }
+  .shell { display: block; max-width: none; padding: 0; }
   .rail {
-    position: static;
-    display: grid;
+    position: static; display: grid;
     grid-template-columns: 74px minmax(0, 1fr);
     column-gap: 14px; row-gap: 5px;
     border-bottom: 2pt solid var(--ink); padding-bottom: 8px; margin-bottom: 14px;
@@ -451,22 +388,20 @@ footer {
   .rail .mark { font-size: 19pt; }
   .rail .pill { display: none; }
   .rail .role { margin: 4px 0 0; font-size: 8.4pt; }
-  .nav { display: none; }
   .rail .contact { grid-column: 2; flex-direction: row; flex-wrap: wrap; gap: 3px 14px; margin: 0; }
-  .rail .contact a, .rail .contact span { font-size: 8pt; }
-  .hero { padding-bottom: 18px; }
-  .thesis { font-size: 21pt; max-width: none; margin-bottom: 10px; }
+  .rail .contact a { font-size: 8pt; }
+  .hero { padding-bottom: 16px; }
+  .thesis { font-size: 21pt; margin-bottom: 10px; }
   .thesis em::after { height: 1.4pt; }
-  .deck { font-size: 9.4pt; margin-bottom: 14px; }
-  section { padding-block: 20px 0; break-inside: auto; }
+  .deck { font-size: 9.4pt; margin-bottom: 12px; }
+  section { padding-block: 18px 0; }
   .sec-head { margin-bottom: 12px; }
   .sec-head h2 { font-size: 15pt; }
   .rise { opacity: 1 !important; transform: none !important; }
-  .proj, .verb, .step, .skill, .metric, .tl-row { break-inside: avoid; }
+  .proj, .verb, .step, .skill, .metric, table.mini tr { break-inside: avoid; }
   .proj { grid-template-columns: minmax(0,1fr) 190px; gap: 20px; padding: 12px 14px; }
-  .closing { margin-top: 22px; }
+  .closing { margin-top: 20px; }
   .closing blockquote { font-size: 13pt; }
-  .links { display: none; }
   a { color: var(--ink); }
 }
 
@@ -474,24 +409,44 @@ footer {
    responsive
    ============================================================ */
 @media (max-width: 1000px) {
-  .shell { grid-template-columns: minmax(0,1fr); gap: var(--s6); padding: var(--s5) var(--s5) var(--s7); }
+  .shell { grid-template-columns: minmax(0,1fr); gap: var(--s5); padding: var(--s5) var(--s5) var(--s7); }
   .rail {
-    position: static;
-    display: grid;
+    position: static; display: grid;
     grid-template-columns: 138px minmax(0, 1fr);
-    gap: var(--s4);
-    align-items: start;
+    gap: var(--s4); align-items: start;
   }
   .portrait { margin-bottom: 0; grid-row: 1 / span 2; }
   .rail .id { grid-column: 2; }
   .rail .contact { grid-column: 2; }
-  .nav { display: none; }
+
+  /* 모바일에도 내비게이션을 남긴다 — 가로 스크롤 칩 + 상단 고정 */
+  .nav {
+    grid-column: 1 / -1;
+    position: sticky; top: 0; z-index: 8;
+    flex-direction: row; gap: 6px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    margin: var(--s3) calc(-1 * var(--s5)) 0;
+    padding: var(--s2) var(--s5);
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-block: 1px solid var(--line);
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a {
+    flex: 0 0 auto;
+    border: 1px solid var(--line); border-left-width: 1px;
+    padding: 5px 11px; white-space: nowrap;
+    background: var(--card);
+  }
+  .nav a i { display: none; }
+  .nav a.active { border-color: var(--accent); background: var(--fairy); border-left-color: var(--accent); }
+
   .proj { grid-template-columns: minmax(0,1fr); gap: var(--s4); }
   .side { border-left: 0; border-top: 1px solid var(--line-soft); padding-left: 0; padding-top: var(--s4); }
   .side dl { flex-direction: row; flex-wrap: wrap; gap: var(--s5); }
-  .tl-row { grid-template-columns: minmax(0,1fr); gap: 3px; }
-  .tl-row .who { text-align: left; }
   .hero::after { right: -30vw; }
+  section { padding-block: var(--s7) 0; }
 }
 @media (max-width: 560px) {
   body { font-size: 15px; }
@@ -499,6 +454,7 @@ footer {
   .verb { padding-inline: var(--s4); }
   .verb::before { margin-inline: calc(-1 * var(--s4)); }
   .proj { padding: var(--s4); }
+  .rail { grid-template-columns: 108px minmax(0, 1fr); }
 }
 </style>
 </head>
@@ -519,12 +475,11 @@ footer {
     </div>
 
     <nav class="nav">
-      <a href="#capability">역량 — 네 갈래 <span>&rarr;</span></a>
-      <a href="#work">지금 하는 일 <span>&rarr;</span></a>
-      <a href="#way">일하는 방식 <span>&rarr;</span></a>
-      <a href="#projects">프로젝트 <span>&rarr;</span></a>
-      <a href="#history">경력·활동 <span>&rarr;</span></a>
-      <a href="#skills">기술·자격 <span>&rarr;</span></a>
+      <a href="#capability">역량 — 네 갈래 <i>&rarr;</i></a>
+      <a href="#projects">프로젝트 <i>&rarr;</i></a>
+      <a href="#way">일하는 방식 <i>&rarr;</i></a>
+      <a href="#history">경력 · 활동 <i>&rarr;</i></a>
+      <a href="#skills">기술 · 자격 <i>&rarr;</i></a>
     </nav>
 
     <div class="contact">
@@ -541,11 +496,16 @@ footer {
       <p class="eyebrow">Portfolio &middot; 2026</p>
       <h2 class="thesis"><em>기획하고</em>, <em>만들고</em>, <em>평가하고</em>, <em>지킵니다</em>.</h2>
       <p class="deck">
-        보안을 전공하며 <b>잘못될 수 있는 경우를 먼저 보는 법</b>을 배웠고, 개발을 하며 <b>만드는 법</b>을,
-        실무에서 <b>맞는지 재는 기준을 먼저 세우는 법</b>을 익혔습니다.
+        보안에서 시작해 개발로, 개발에서 AI로 옮겨 왔고, 실무에서는 기획까지 맡았습니다.
         지금은 규제 도메인의 AI 서비스를 <b>1인 PM 겸 개발자</b>로 맡아 기획부터 검증까지 하고,
         이미 운영 중인 사내 솔루션을 이어받아 고치고 있습니다.
       </p>
+
+      <div class="hero-cta">
+        <a href="mailto:vina1601@ewhain.net">&rarr; 이메일로 연락</a>
+        <a href="https://github.com/hyunbin1601" target="_blank" rel="noopener">&rarr; GitHub</a>
+        <a href="#projects">&rarr; 프로젝트 보기</a>
+      </div>
 
       <div class="metrics">
         <div class="metric">
@@ -571,12 +531,12 @@ footer {
       </div>
     </header>
 
-    <!-- ---------- CAPABILITY ---------- -->
+    <!-- ---------- 01 역량 ---------- -->
     <section id="capability" class="rise">
       <div class="sec-head">
         <span class="num">01 / CAPABILITY</span>
         <h2>네 갈래를 해왔습니다</h2>
-        <p>보안에서 시작해 개발로, 개발에서 AI로 옮겨 왔고, 실무에서는 기획까지 맡았습니다.</p>
+        <p>각 갈래에서 가장 앞에 둔 것이 제일 강한 근거입니다. 구체적인 수치와 과정은 다음 장 프로젝트에 있습니다.</p>
         <div class="rule"></div>
       </div>
 
@@ -587,10 +547,8 @@ footer {
           <p class="def">서비스를 만드는 쪽과, 그 답이 맞는지 재는 쪽을 다 해봤습니다.</p>
           <ul>
             <li>규제 도메인 AI 서비스를 <b>1인 PM 겸 개발자</b>로 기획부터 검증까지</li>
-            <li><b>RAG 파이프라인 설계</b> — 밀집·희소 검색 결합, RRF, 폴백 구조</li>
-            <li>평가셋 <b>3,200문항</b>을 직접 만들어 <b>환각성 오류 32.6% → 9.0%</b> (동일 질문 1,382개 재측정)</li>
+            <li>RAG 파이프라인 설계 · <b>평가셋을 직접 만들어 품질을 수치로 관리</b></li>
             <li>사내 기능을 <b>MCP 서버</b>로 노출해 에이전트가 직접 호출하도록 연동</li>
-            <li>적대적 공격(DeepFool) 직접 구현 — <b>AI도 공격당한다는 관점</b></li>
           </ul>
         </div>
 
@@ -599,11 +557,9 @@ footer {
           <p class="sub">Security</p>
           <p class="def">전공이고, 실제로 찾아 신고한 경험이 있습니다.</p>
           <ul>
-            <li>이화여자대학교 <b>사이버보안학과</b> · 교내 보안학술동아리 <b>회장·부회장 3년</b></li>
-            <li><b>취약점 제보 2건</b> — 내부정보 노출(LFI), 평문 개인정보 노출 · KISA 제보 · <b>KVE 수령</b></li>
-            <li><b>MITRE ATT&amp;CK</b> 기반 악성 행위 분류 · 악성코드 <b>수천 건</b> 직접 실행</li>
-            <li>문서 내 <b>개인정보 자동 탐지·마스킹</b> 프로그램 · 클라우드보안 교육 이수</li>
-            <li>교내 CTF <b>웹·포렌식 2문제 출제</b> — 취약점을 심는 쪽도 해봤습니다</li>
+            <li><b>취약점 제보 2건</b> — 내부정보 노출, 평문 개인정보 노출 · KISA 제보 · <b>KVE 수령</b></li>
+            <li>사이버보안학과 · 교내 보안학술동아리 <b>회장·부회장 3년</b> · CTF 웹·포렌식 출제</li>
+            <li>MITRE ATT&amp;CK 악성 행위 분류 · 개인정보 자동 탐지·마스킹 · 클라우드보안 이수</li>
           </ul>
         </div>
 
@@ -612,11 +568,9 @@ footer {
           <p class="sub">Engineering</p>
           <p class="def">화면부터 서버, 외부 도구 연동까지 배포해 봤습니다.</p>
           <ul>
-            <li>React · TypeScript 서비스 <b>4건</b> — somoim · Verifit · New:ON · PIOLINK(외주 납품)</li>
             <li>고객 채널 <b>PASS 본인인증 · 회원가입 · 로그인</b> 구현</li>
-            <li>운영 중인 사내 솔루션의 <b>관리자 대시보드 신규 설계</b></li>
-            <li>Python · Flask · FastAPI API 서버 · Docker · Neo4j · Kafka</li>
-            <li>Rust 퍼저, MCP 서버 등 <b>외부 도구를 붙여 쓰는 연동</b> — 대부분은 코드가 아니라 <b>계약을 정하는 일</b>이었습니다</li>
+            <li>React · TypeScript 서비스 <b>4건</b> — 외주 1건 납품, 2건 배포</li>
+            <li>Python · Flask · FastAPI · Docker · Neo4j · Kafka · <b>외부 도구 연동</b></li>
           </ul>
         </div>
 
@@ -625,42 +579,39 @@ footer {
           <p class="sub">Planning &middot; Product</p>
           <p class="def">요건을 정의하고, 사람 사이를 맞추고, 범위 밖을 제안해 봤습니다.</p>
           <ul>
-            <li>카본 AI <b>1인 PM 겸 개발자</b> — 인턴 때 낸 <b>첫 기획안이 채택되어</b> 프로젝트가 착수되고 정규직으로 전환</li>
-            <li>넷지 고도화에서 <b>기획 · 디자인 · 개발 전 단계</b> 참여, 기획자·디자이너와 협의 내용을 합의해 문서화</li>
-            <li><b>두 서비스를 붙이자고 직접 제안</b>해 관리자 대시보드 기능이 됨 — 요청 범위 밖의 제안</li>
-            <li><b>somoim</b> — 소모임 구인 서비스에서 <b>서비스 기획 · PM · 프론트엔드</b>를 함께 맡아 배포까지</li>
-            <li>개인정보 비식별화 공모전 <b>PM</b> (3인) — 요구사항 정의 · 일정 · 발표 총괄</li>
-            <li>해커톤 <b>PM</b> — 대회 중 정책 변경으로 핵심 기능이 막히자 방향을 틀어 완주</li>
-            <li>실무자 의견을 <b>요건으로 정리</b>, 설문 항목을 미리 만들어 돌림</li>
+            <li>인턴 때 낸 <b>첫 기획안이 채택되어</b> 프로젝트가 착수되고 정규직으로 전환</li>
+            <li><b>두 서비스를 붙이자고 직접 제안</b>해 기능이 됨 — 요청 범위 밖의 제안</li>
+            <li>공모전 PM · 해커톤 PM · somoim 기획 — <b>요건 정의부터 일정·발표까지</b></li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- ---------- WORK ---------- -->
-    <section id="work" class="rise">
+    <!-- ---------- 02 프로젝트 ---------- -->
+    <section id="projects" class="rise">
       <div class="sec-head">
-        <span class="num">02 / NOW</span>
-        <h2>지금 하는 일</h2>
-        <p>(주)후시파트너스 · 인턴 2025.12&ndash;2026.02 → 정규직 2026.03&ndash;현재 · AI랩실 선임매니저</p>
+        <span class="num">02 / PROJECTS</span>
+        <h2>프로젝트</h2>
+        <p>회사에서 셋, 회사 밖에서 둘. 규모보다 <b>무엇을 정해야 했는지</b>가 남은 일들입니다.</p>
         <div class="rule"></div>
       </div>
 
       <div class="projects">
+
         <article class="proj">
           <div>
             <h3>카본 AI — 탄소배출권 규제 도메인 AI 서비스</h3>
-            <p class="meta">1인 PM 겸 개발자 &nbsp;/&nbsp; 기획 · 개발 · 검증 전 과정</p>
-            <p>탄소배출권이라는 낯선 규제 영역을 익히며 서비스를 처음부터 만들었습니다. 기능을 개선하기 전에 <b>무엇이 맞는 답인지 정하는 기준부터 만들었습니다.</b> 정답과 라벨을 갖춘 도메인 평가셋 3,200문항을 직접 구축했고, 조합으로 만들 수 없는 영역은 수기로 채웠습니다.</p>
-            <p>서로 다른 방식의 검색을 결합하는 구조로 바꾼 뒤, 같은 질문 1,382개를 개선 전후 시스템에 다시 넣어 사실오류·날조 같은 <b>환각성 오류를 32.6%에서 9.0%로</b> 줄였습니다. 검색 단계는 성격이 다른 지표라 180문항으로 따로 측정했습니다.</p>
+            <p class="meta">2025.12&ndash;현재 &nbsp;/&nbsp; (주)후시파트너스 &nbsp;/&nbsp; 1인 PM 겸 개발자</p>
+            <div class="doms"><span class="dom ai">AI</span><span class="dom plan">기획·PM</span></div>
+            <p>낯선 규제 영역을 익히며 기획·개발·검증을 혼자 담당했습니다. 기능을 개선하기 전에 <b>무엇이 맞는 답인지 정하는 기준부터 만들었습니다.</b> 정답과 라벨을 갖춘 도메인 평가셋 3,200문항을 직접 구축했고, 조합으로 만들 수 없는 영역은 수기로 채웠습니다.</p>
+            <p>서로 다른 방식의 검색을 결합하는 구조로 바꾼 뒤, 같은 질문 1,382개를 개선 전후 시스템에 다시 넣어 <b>환각성 오류를 32.6%에서 9.0%로</b> 줄였습니다. 검색은 성격이 다른 지표라 180문항으로 따로 측정했습니다.</p>
             <div class="candid"><b>덧붙임</b> — 정확성은 좋아졌지만 답변을 거부하는 비율은 오히려 나빠졌습니다. 숨기지 않고 함께 보고했고, 그래서 다음에 볼 곳이 남았습니다.</div>
-            <div class="tags"><span class="tag">RAG</span><span class="tag">평가셋 설계</span><span class="tag">LangChain</span><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">LLM-as-judge</span></div>
           </div>
           <div class="side">
             <dl>
-              <div><dt>환각성 오류</dt><dd>32.6% → 9.0%<small>표본 1,382문항 paired</small></dd></div>
-              <div><dt>근거 검색 실패</dt><dd>49.4% → 9.4%<small>표본 180문항</small></dd></div>
-              <div><dt>자체 평가셋</dt><dd>3,200문항<small>재현 가능하게 시드 고정</small></dd></div>
+              <div><dt>환각성 오류</dt><dd>32.6% → 9.0%<small>동일 질문 1,382개 재측정</small></dd></div>
+              <div><dt>근거 검색 실패</dt><dd>49.4% → 9.4%<small>180문항</small></dd></div>
+              <div><dt>자체 평가셋</dt><dd>3,200문항<small>시드 고정으로 재현 가능</small></dd></div>
             </dl>
           </div>
         </article>
@@ -668,10 +619,10 @@ footer {
         <article class="proj">
           <div>
             <h3>넷지(NetZ) — 운영 중인 사내 솔루션 고도화</h3>
-            <p class="meta">기획 · 디자인 · 개발 전 단계 참여</p>
-            <p>새로 짜는 일이 아니라 <b>이미 쓰이고 있는 솔루션</b>을 맡았습니다. 사용자가 있는 시스템은 화면을 새로 그리는 일보다 기존 흐름을 깨지 않는 것이 먼저였습니다. 실무자 의견을 모아 요건으로 정리하고, 여러 사업장을 한 화면에서 비교하는 <b>관리자 대시보드를 새로 설계</b>했습니다. 반복 업무를 자동으로 수행하는 기능과 AI 채팅을 같은 화면에 통합 배치했습니다.</p>
-            <p>나아가 <b>두 서비스를 붙이자고 직접 제안</b>해, 배출량 계산·계수 조회·데이터 조회 기능을 MCP 서버로 묶어 AI가 직접 호출하도록 연동했습니다. 연동 작업의 대부분은 코드가 아니라 <b>무엇을 노출하고 무엇을 주고받을지 정하는 일</b>이었습니다. 특히 값을 모를 때 무엇을 반환할지 정하지 않으면 AI는 빈칸을 그럴듯한 숫자로 채우기 때문에, 모를 때는 멈추는 것을 기본값으로 정했습니다.</p>
-            <div class="tags"><span class="tag">MCP 서버</span><span class="tag">인터페이스 정의</span><span class="tag">대시보드 설계</span><span class="tag">browser-use</span><span class="tag">React</span></div>
+            <p class="meta">2026.03&ndash;현재 &nbsp;/&nbsp; (주)후시파트너스 &nbsp;/&nbsp; 기획 · 디자인 · 개발</p>
+            <div class="doms"><span class="dom dev">개발</span><span class="dom plan">기획·PM</span><span class="dom ai">AI</span></div>
+            <p>새로 짜는 일이 아니라 <b>이미 쓰이고 있는 솔루션</b>을 맡았습니다. 사용자가 있는 시스템은 화면을 새로 그리는 일보다 기존 흐름을 깨지 않는 것이 먼저였습니다. 실무자 의견을 모아 요건으로 정리하고, 여러 사업장을 한 화면에서 비교하는 관리자 대시보드를 새로 설계했습니다.</p>
+            <p>나아가 두 서비스를 붙이자고 직접 제안해, 계산·조회 기능을 MCP 서버로 묶어 AI가 호출하도록 연동했습니다. 연동의 대부분은 코드가 아니라 <b>무엇을 노출하고 무엇을 주고받을지 정하는 일</b>이었습니다. 값을 모를 때 무엇을 반환할지 정하지 않으면 AI는 빈칸을 그럴듯한 숫자로 채우기 때문에, <b>모를 때는 멈추는 것</b>을 기본값으로 정했습니다.</p>
           </div>
           <div class="side">
             <dl>
@@ -683,26 +634,69 @@ footer {
 
         <article class="proj">
           <div>
-            <h3>외부 사업 프로젝트 — 고객 채널 개발</h3>
-            <p class="meta">일부 서비스 개발</p>
-            <p>대기업 고객사의 탄소배출권 신청 페이지에서 <b>PASS 본인인증과 회원가입, 로그인</b>을 담당했습니다. 신청 업무보다 <b>사람이 들어오는 입구</b>를 맡은 셈이었고, 여기서 막히면 뒤의 모든 기능이 쓰이지 못한다는 점이 분명했습니다. 이 밖에 지자체 사업과 히트펌프 탄소배출권 사업의 서비스 개발에 참여했습니다.</p>
-            <div class="tags"><span class="tag">PASS 본인인증</span><span class="tag">회원가입·로그인</span><span class="tag">개인정보 최소 수집</span></div>
+            <h3>고객 채널 인증 — 신청 페이지 본인인증 · 가입</h3>
+            <p class="meta">2026 &nbsp;/&nbsp; 외부 사업 프로젝트 &nbsp;/&nbsp; 서비스 개발</p>
+            <div class="doms"><span class="dom dev">개발</span></div>
+            <p>대기업 고객사의 신청 페이지에서 <b>PASS 본인인증과 회원가입, 로그인</b>을 담당했습니다. 신청 업무보다 <b>사람이 들어오는 입구</b>를 맡은 셈이었고, 여기서 막히면 뒤의 모든 기능이 쓰이지 못한다는 점이 분명했습니다. 이 밖에 지자체 사업과 히트펌프 탄소배출권 사업의 서비스 개발에 참여했습니다.</p>
+          </div>
+          <div class="side">
+            <dl><div><dt>담당 구간</dt><dd>인증 · 가입 · 로그인<small>개인정보를 받는 순간이자 이탈이 가장 많은 구간</small></dd></div></dl>
+          </div>
+        </article>
+
+        <article class="proj">
+          <div>
+            <h3>ShiftX TDR — 악성 행위 탐지 시스템</h3>
+            <p class="meta">2025.03&ndash;2025.11 &nbsp;/&nbsp; KISIA S-개발자 3기 · 엔키화이트햇 연계 · 5인 팀 &nbsp;/&nbsp; AI 에이전트 파트</p>
+            <div class="doms"><span class="dom ai">AI</span><span class="dom sec">정보보안</span></div>
+            <p>AI가 학습할 악성 행위 데이터가 공개되어 있지 않았습니다. 제가 완성하지 못하면 팀 전체 일정이 멈추는 구조였고, <b>없으면 만들자고 제안했습니다.</b> 샘플을 수집해 가상환경에서 수천 건 실행하고 행위를 트레이스로 기록했습니다.</p>
+            <p>상당수 샘플이 가상환경을 알아채고 실행을 멈추거나 환경을 다운시켜, 처음 몇 주는 결과 없이 지나갔습니다. 버티게 해 준 것은 각오가 아니라 방식이었습니다. <b>실행 전에 스냅샷을 저장해 두고 환경이 죽으면 곧바로 되돌리는 절차</b>를 만들자 속도가 붙었습니다. 모은 데이터는 MITRE ATT&amp;CK 기준으로 분류했고, 정상으로 판정된 건은 AI를 아예 호출하지 않도록 해 비용을 줄였습니다.</p>
           </div>
           <div class="side">
             <dl>
-              <div><dt>담당 구간</dt><dd>인증 · 가입 · 로그인<small>개인정보를 받는 순간이자 이탈이 가장 많은 구간</small></dd></div>
+              <div><dt>교육 규모</dt><dd>540시간<small>약 10개월 · 재직·학업 병행</small></dd></div>
+              <div><dt>수집 방식</dt><dd>직접 실행<small>악성코드 수천 건 · 포맷·복원 반복</small></dd></div>
             </dl>
           </div>
         </article>
+
+        <article class="proj">
+          <div>
+            <h3>somoim — 소모임·번개 모임 구인 서비스</h3>
+            <p class="meta">2024.07&ndash;2024.10 &nbsp;/&nbsp; 2인 팀 &nbsp;/&nbsp; 서비스 기획 · PM · 프론트엔드</p>
+            <div class="doms"><span class="dom plan">기획·PM</span><span class="dom dev">개발</span></div>
+            <p>기획부터 배포까지 한 서비스입니다. <b>무엇을 만들지 정하는 일부터 시작해</b> 화면 흐름을 짜고, 2인 팀의 역할과 일정을 나눠 진행했습니다. React·TypeScript로 프론트엔드를 구현하고 백엔드와 API를 맞춰 배포를 마쳤습니다.</p>
+            <p>작은 팀이라 기획과 개발을 같은 사람이 하게 됐고, 그래서 <b>기획이 바뀔 때 구현이 어디까지 흔들리는지</b>를 몸으로 알게 된 프로젝트입니다.</p>
+          </div>
+          <div class="side">
+            <dl><div><dt>맡은 범위</dt><dd>기획 · PM · 개발<small>2인 팀 — 프론트엔드 1, 백엔드 1</small></dd></div></dl>
+          </div>
+        </article>
+      </div>
+
+      <h3 style="font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-deep);margin:var(--s6) 0 var(--s3);font-weight:600;">그 외 프로젝트</h3>
+      <div class="tbl-wrap">
+        <table class="mini">
+          <thead>
+            <tr><th>프로젝트</th><th>기간</th><th>역할</th><th>내용</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>New:ON</td><td class="when">2024.03&ndash;12</td><td>프론트엔드 · 연동</td><td>시큐어 코딩 VS Code 확장. Rust 기반 외부 API 퍼저 연동. 졸업프로젝트 4인, 배포 완료</td></tr>
+            <tr><td>개인정보 비식별화</td><td class="when">2025.02&ndash;03</td><td>PM</td><td>문서 내 개인정보 자동 탐지·마스킹. 개인정보보호위원회 공모전 3인. 어떤 항목까지 개인정보로 볼지 정하는 일이 개발보다 어려웠음</td></tr>
+            <tr><td>PIOLINK DDoS 시뮬레이터</td><td class="when">2023.08&ndash;12</td><td>프론트엔드 (외주)</td><td>보안기업 외주. 제어 UI 구현, 서버 연동으로 공격 상태 실시간 시각화. 납품 완료</td></tr>
+            <tr><td>Verifit</td><td class="when">2024.03&ndash;06</td><td>프론트엔드</td><td>React Native 건강관리 앱. 백엔드 API 연동</td></tr>
+            <tr><td>보이스피싱 탐지 해커톤</td><td class="when">2024.07&ndash;08</td><td>PM</td><td>대회 중 모바일 정책 변경으로 핵심 기능이 막히자 공개 데이터 기반으로 방향을 틀어 발표 완주</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <!-- ---------- WAY ---------- -->
+    <!-- ---------- 03 일하는 방식 ---------- -->
     <section id="way" class="rise">
       <div class="sec-head">
         <span class="num">03 / METHOD</span>
         <h2>계획을 세우고, 기준을 세워 검토합니다</h2>
-        <p>시작하기 전에 계획을 세우고, 다 만든 뒤에도 잴 기준을 세워 다시 검토합니다. 성격 나열이 아니라 한 줄기로 이어진 과정입니다 — 앞 단계가 다음 단계를 만들었습니다.</p>
+        <p>성격 나열이 아니라 한 줄기로 이어진 과정입니다 — 앞 단계가 다음 단계를 만들었습니다.</p>
         <div class="rule"></div>
       </div>
 
@@ -711,7 +705,7 @@ footer {
           <span class="idx">01</span>
           <div>
             <h3>안 되는 경우를 먼저 본다</h3>
-            <p>보안에서 온 시선입니다. <span class="ev">취약점 제보 2건, CTF 문제 출제, 레드팀 관점의 과제 수행</span>이 모두 여기서 나왔습니다.</p>
+            <p>보안에서 온 시선입니다. <span class="ev">취약점 제보, CTF 문제 출제, 레드팀 관점의 과제 수행</span>이 모두 여기서 나왔습니다.</p>
           </div>
         </div>
         <div class="step">
@@ -725,7 +719,7 @@ footer {
           <span class="idx">03</span>
           <div>
             <h3>다 만든 뒤 맞는지 잴 기준을 세운다</h3>
-            <p>성능보다 기준이 먼저였습니다. <span class="ev">개선 전에 만든 평가 기준표, 과제 평가지표 3개와 판정 기준, 출력 검증용 필수 키워드 검사.</span></p>
+            <p>성능보다 기준이 먼저였습니다. <span class="ev">개선 전에 만든 평가 기준표, 과제 평가지표와 판정 기준, 출력 검증용 필수 키워드 검사.</span></p>
           </div>
         </div>
         <div class="step">
@@ -738,154 +732,39 @@ footer {
       </div>
     </section>
 
-    <!-- ---------- PROJECTS ---------- -->
-    <section id="projects" class="rise">
-      <div class="sec-head">
-        <span class="num">04 / SELECTED</span>
-        <h2>선별 프로젝트</h2>
-        <p>회사 밖에서 만든 것들. 규모보다 <b>무엇을 정해야 했는지</b>가 남은 일들을 골랐습니다.</p>
-        <div class="rule"></div>
-      </div>
-
-      <div class="projects">
-        <article class="proj">
-          <div>
-            <h3>ShiftX TDR — 악성 행위 탐지 시스템</h3>
-            <p class="meta">2025.03&ndash;2025.11 &nbsp;/&nbsp; KISIA S-개발자 3기 · 엔키화이트햇 연계 · 5인 팀 · AI 에이전트 파트</p>
-            <p>AI가 학습할 악성 행위 데이터가 공개되어 있지 않았습니다. 제가 완성하지 못하면 팀 전체 일정이 멈추는 구조였고, <b>없으면 만들자고 제안했습니다.</b> 샘플을 수집해 가상환경에서 수천 건 실행하고 행위를 트레이스로 기록했습니다.</p>
-            <p>상당수 샘플이 가상환경을 알아채고 실행을 멈추거나 환경을 다운시켜, 처음 몇 주는 결과 없이 지나갔습니다. 버티게 해 준 것은 각오가 아니라 방식이었습니다. <b>실행 전에 스냅샷을 저장해 두고 환경이 죽으면 곧바로 되돌리는 절차</b>를 만들자 속도가 붙었습니다. 모은 데이터는 MITRE ATT&amp;CK 기준으로 분류해 그래프·벡터 DB로 탐색하게 했고, 정상으로 판정된 건은 AI를 아예 호출하지 않도록 해 비용을 줄였습니다.</p>
-            <div class="tags"><span class="tag">MITRE ATT&amp;CK</span><span class="tag">Neo4j</span><span class="tag">Kafka</span><span class="tag">VMware</span><span class="tag">Gemini</span><span class="tag">CoT</span></div>
-          </div>
-          <div class="side">
-            <dl>
-              <div><dt>교육 규모</dt><dd>540시간<small>약 10개월 · 재직·학업 병행</small></dd></div>
-              <div><dt>수집 방식</dt><dd>직접 실행<small>악성코드 수천 건 · 포맷·복원 반복</small></dd></div>
-            </dl>
-          </div>
-        </article>
-
-        <article class="proj">
-          <div>
-            <h3>New:ON — 시큐어 코딩 VS Code 확장</h3>
-            <p class="meta">2024.03&ndash;2024.12 &nbsp;/&nbsp; 졸업프로젝트 · 4인 팀 · 프론트엔드 · API 퍼징</p>
-            <p>개발자가 코드를 쓰는 중에 취약점을 알려 주는 확장 프로그램입니다. TypeScript로 확장을 만들고, <b>Rust로 작성된 외부 API 퍼저를 붙여 쓰는 연동</b>을 담당했습니다. TypeScript·Python·Rust가 섞인 스택에서 협업했고 배포까지 마쳤습니다.</p>
-            <div class="tags"><span class="tag">TypeScript</span><span class="tag">VS Code API</span><span class="tag">Cherrybomb</span><span class="tag">배포 완료</span></div>
-          </div>
-          <div class="side">
-            <dl><div><dt>연동</dt><dd>Rust 퍼저<small>이종 언어 도구를 붙여 쓴 경험</small></dd></div></dl>
-          </div>
-        </article>
-
-        <article class="proj">
-          <div>
-            <h3>somoim — 소모임·번개 모임 구인 서비스</h3>
-            <p class="meta">2024.07&ndash;2024.10 &nbsp;/&nbsp; 2인 팀 · 서비스 기획 · PM · 프론트엔드</p>
-            <p>기획부터 배포까지 한 서비스입니다. <b>무엇을 만들지 정하는 일부터 시작해</b> 화면 흐름을 짜고, 2인 팀의 역할과 일정을 나눠 진행했습니다. React·TypeScript로 프론트엔드를 구현하고 백엔드와 API를 맞춰 <b>배포까지 마쳤습니다.</b></p>
-            <p>작은 팀이라 기획과 개발을 같은 사람이 하게 됐고, 그래서 <b>기획이 바뀔 때 구현이 어디까지 흔들리는지</b>를 몸으로 알게 된 프로젝트입니다.</p>
-            <div class="tags"><span class="tag">서비스 기획</span><span class="tag">PM</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">배포 완료</span></div>
-          </div>
-          <div class="side">
-            <dl><div><dt>맡은 범위</dt><dd>기획 · PM · 개발<small>2인 팀 — 프론트엔드 1, 백엔드 1</small></dd></div></dl>
-          </div>
-        </article>
-
-        <article class="proj">
-          <div>
-            <h3>개인정보 비식별화 프로그램</h3>
-            <p class="meta">2025.02&ndash;2025.03 &nbsp;/&nbsp; 개인정보보호위원회 공모전 · 3인 팀 · PM</p>
-            <p>문서 안의 개인정보를 자동으로 찾아 가리는 프로그램입니다. 요구사항 정의와 일정, 발표를 총괄했습니다. 개발보다 어려웠던 것은 <b>어떤 항목까지 개인정보로 볼지 정하는 일</b>이었습니다. 규칙을 먼저 정하지 않으면 같은 문서를 두 사람이 다르게 처리했습니다.</p>
-            <div class="tags"><span class="tag">Python</span><span class="tag">개인정보보호</span><span class="tag">PM</span></div>
-          </div>
-          <div class="side">
-            <dl><div><dt>어려웠던 것</dt><dd>정의부터<small>탐지 규칙 없이는 결과가 흔들린다</small></dd></div></dl>
-          </div>
-        </article>
-
-        <article class="proj">
-          <div>
-            <h3>PIOLINK DDoS 시뮬레이터</h3>
-            <p class="meta">2023.08&ndash;2023.12 &nbsp;/&nbsp; 네트워크 보안 기업 외주 · 프론트엔드</p>
-            <p>실제 네트워크 공격 패턴을 재현하는 도구의 제어 화면을 만들었습니다. React로 시뮬레이션 제어 인터페이스를 구현하고 서버와 연동해 <b>공격 상태를 실시간으로 시각화</b>했습니다. 개발팀과 서비스팀이 나뉘어 있어 요구사항을 오가며 조율했고, 납품을 마쳤습니다.</p>
-            <div class="tags"><span class="tag">React</span><span class="tag">Flask 연동</span><span class="tag">실시간 시각화</span><span class="tag">납품 완료</span></div>
-          </div>
-          <div class="side">
-            <dl><div><dt>팀 구성</dt><dd>개발 3 · 서비스 6<small>요구사항 관리를 함께 맡음</small></dd></div></dl>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- ---------- HISTORY ---------- -->
+    <!-- ---------- 04 경력 · 활동 ---------- -->
     <section id="history" class="rise">
       <div class="sec-head">
-        <span class="num">05 / RECORD</span>
+        <span class="num">04 / RECORD</span>
         <h2>경력 · 활동</h2>
         <div class="rule"></div>
       </div>
 
-      <div class="tl">
-        <div class="tl-row">
-          <span class="when">2026.03 &ndash; 현재</span>
-          <span class="what"><b>(주)후시파트너스</b> · AI랩실 선임매니저<em>카본 AI 총괄 개발, 넷지 고도화, 외부 사업 프로젝트</em></span>
-          <span class="who">정규직</span>
-        </div>
-        <div class="tl-row">
-          <span class="when">2025.12 &ndash; 2026.02</span>
-          <span class="what"><b>(주)후시파트너스</b> 인턴<em>AI 기술 동향 사내 발표, 사내 AI 업무 교육 보조, 카본 AI 첫 기획안 제안 → 정규직 전환</em></span>
-          <span class="who">인턴</span>
-        </div>
-        <div class="tl-row">
-          <span class="when">2025.03 &ndash; 2025.12</span>
-          <span class="what"><b>KISIA S-개발자 3기</b><em>보안 개발자 부트캠프 540시간 · 시큐어 코딩, 웹·시스템 보안, 리버싱 → ShiftX TDR 프로젝트</em></span>
-          <span class="who">수료</span>
-        </div>
-        <div class="tl-row">
-          <span class="when">2024.12</span>
-          <span class="what"><b>클라우드보안</b> · 한국정보보호산업협회<em>서비스가 클라우드로 옮겨 가는 흐름에서 접근 통제와 데이터 보호 요건을 알고 개발해야 한다고 판단해 수강</em></span>
-          <span class="who">수료</span>
-        </div>
-        <div class="tl-row">
-          <span class="when">2022.09 &ndash; 2025.08</span>
-          <span class="what"><b>EVI$ION</b> 교내 보안학술동아리 · 회장·부회장(2023.09&ndash;)<em>커리큘럼이 없어 신입이 조용히 떠나던 상황에서 웹해킹·포렌식 자료 100여 개를 모아 기초·심화 트랙으로 나누고 직접 강의. 신입 잔존 20명 중 15명 — 이전 기수는 11명. 러닝세션·토요세션을 신설</em></span>
-          <span class="who">회장</span>
-        </div>
-        <div class="tl-row">
-          <span class="when">2024.05 &ndash; 2024.11</span>
-          <span class="what"><b>WISET 정보보안 멘토링</b> · 대표멘티<em>멘티 의견을 모아 건의하고 멘토 일정을 조율</em></span>
-          <span class="who">대표멘티</span>
-        </div>
-        <div class="tl-row">
-          <span class="when">2024.07 &ndash; 2024.08</span>
-          <span class="what"><b>보이스피싱 탐지 해커톤</b> · PM<em>대회 중 모바일 정책 변경으로 통화 녹음 기반 탐지가 막히자, 단 한 번인 멘토링 기회를 바로 쓰고 공개 데이터 기반 판별 서비스로 방향을 틀어 발표를 마침</em></span>
-          <span class="who">PM</span>
-        </div>
-        <div class="tl-row">
-          <span class="when">2023.12 &ndash; 2024.02</span>
-          <span class="what"><b>ECS CTF</b> 출제위원 · 운영진<em>웹 · 포렌식 2문제 출제. 우회 기법을 한 문제 안에 단계로 배치하고 풀이 문서까지 작성</em></span>
-          <span class="who">출제</span>
-        </div>
-        <div class="tl-row">
-          <span class="when">2023.03 &ndash; 2023.12</span>
-          <span class="what"><b>이화여대 사이버보안학과 학부연구생</b> · 김종길 교수 연구실<em>적대적 공격 연구. 판단을 뒤집는 최소 변화량을 찾는 DeepFool을 직접 구현해 모델별로 비교</em></span>
-          <span class="who">연구</span>
-        </div>
-        <div class="tl-row">
-          <span class="when">2021.03 &ndash; 2022.02</span>
-          <span class="what"><b>이화여대 사회봉사실천리더</b> · 팀장<em>봉사 라디오와 유기동물 후원 굿즈를 직접 기획해 운영, 봉사 fair 잡지 발행</em></span>
-          <span class="who">팀장</span>
-        </div>
-        <div class="tl-row">
-          <span class="when">2021.03 &ndash; 2026.08</span>
-          <span class="what"><b>이화여자대학교 사이버보안학과</b> 졸업<em>학점 3.36 / 4.3</em></span>
-          <span class="who">학사</span>
-        </div>
+      <div class="tbl-wrap">
+        <table class="mini">
+          <thead>
+            <tr><th>소속 · 활동</th><th>기간</th><th>역할</th><th>한 줄</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>(주)후시파트너스</td><td class="when">2026.03&ndash;현재</td><td>선임매니저 · AI랩실</td><td>카본 AI 총괄 개발, 넷지 고도화, 외부 사업 프로젝트</td></tr>
+            <tr><td>(주)후시파트너스</td><td class="when">2025.12&ndash;2026.02</td><td>인턴</td><td>AI 기술 동향 사내 발표, 카본 AI 첫 기획안 제안 → 정규직 전환</td></tr>
+            <tr><td>KISIA S-개발자 3기</td><td class="when">2025.03&ndash;2025.12</td><td>수료</td><td>보안 개발자 부트캠프 540시간 → ShiftX TDR 프로젝트</td></tr>
+            <tr><td>클라우드보안</td><td class="when">2024.12</td><td>수료</td><td>한국정보보호산업협회. 접근 통제와 데이터 보호 요건</td></tr>
+            <tr><td>EVI$ION</td><td class="when">2022.09&ndash;2025.08</td><td>회장 · 부회장</td><td>자료 100여 개로 커리큘럼 신설·직접 강의. 신입 잔존 20명 중 15명 (이전 기수 11명)</td></tr>
+            <tr><td>WISET 정보보안 멘토링</td><td class="when">2024.05&ndash;2024.11</td><td>대표멘티</td><td>멘티 의견 취합·건의, 멘토 일정 조율</td></tr>
+            <tr><td>ECS CTF</td><td class="when">2023.12&ndash;2024.02</td><td>출제위원 · 운영진</td><td>웹 · 포렌식 2문제 출제, 풀이 문서 작성</td></tr>
+            <tr><td>이화여대 사이버보안학과 연구실</td><td class="when">2023.03&ndash;2023.12</td><td>학부연구생</td><td>적대적 공격 연구. DeepFool 직접 구현해 모델별 비교</td></tr>
+            <tr><td>이화여대 사회봉사실천리더</td><td class="when">2021.03&ndash;2022.02</td><td>팀장</td><td>봉사 라디오·유기동물 후원 굿즈 기획·운영, 봉사 fair 잡지 발행</td></tr>
+            <tr><td>이화여자대학교</td><td class="when">2021.03&ndash;2026.08</td><td>사이버보안학과 졸업</td><td>학점 3.36 / 4.3</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <!-- ---------- SKILLS ---------- -->
+    <!-- ---------- 05 기술 · 자격 ---------- -->
     <section id="skills" class="rise">
       <div class="sec-head">
-        <span class="num">06 / STACK</span>
+        <span class="num">05 / STACK</span>
         <h2>기술 · 자격</h2>
         <div class="rule"></div>
       </div>
@@ -894,10 +773,9 @@ footer {
         <div class="skill">
           <h3>구현</h3>
           <ul>
-            <li><b>Python</b> — AI 서비스, 데이터 수집·처리, 보안 스크립트</li>
+            <li><b>Python</b> · Flask · FastAPI</li>
             <li><b>JavaScript · TypeScript</b> — React, React Native, VS Code 확장</li>
-            <li><b>Flask · FastAPI</b> — API 서버</li>
-            <li><b>Docker</b> — 개발 환경, CTF 문제 격리</li>
+            <li><b>Docker</b> · Neo4j · Kafka</li>
             <li>Java · C — 학부 수업 수준</li>
           </ul>
         </div>
@@ -906,61 +784,39 @@ footer {
           <ul>
             <li><b>RAG 파이프라인 설계</b> — 밀집·희소 검색 결합, RRF</li>
             <li><b>평가셋 기반 품질 측정</b> — 라벨 설계, LLM-as-judge</li>
-            <li><b>MCP 서버 구축</b> — 사내 기능을 도구로 노출</li>
-            <li><b>LangChain</b> · 프롬프트 설계 · 폴백 구조</li>
-            <li><b>Neo4j · Kafka</b> — 행위 데이터 파이프라인</li>
+            <li><b>MCP 서버 구축</b> · LangChain · 프롬프트 설계 · 폴백 구조</li>
           </ul>
         </div>
         <div class="skill">
           <h3>보안</h3>
           <ul>
-            <li><b>웹 취약점</b> — OWASP Top 10, Burp Suite, DVWA·WebGoat</li>
-            <li><b>MITRE ATT&amp;CK</b> — 악성 행위 분류</li>
-            <li><b>포렌식</b> — PCAP 분석, TCP 스트림 재조합</li>
-            <li><b>개인정보 비식별화</b> — 탐지 규칙 설계</li>
-            <li><b>적대적 공격</b> — DeepFool 구현·비교</li>
+            <li><b>웹 취약점</b> — OWASP Top 10, Burp Suite</li>
+            <li><b>MITRE ATT&amp;CK</b> · 악성 행위 분류 · PCAP 포렌식</li>
+            <li><b>개인정보 비식별화</b> · 적대적 공격(DeepFool)</li>
           </ul>
         </div>
         <div class="skill">
-          <h3>도메인</h3>
+          <h3>도메인 · 자격 · 어학</h3>
           <ul>
             <li><b>탄소배출권</b> — K-ETS, MRV, 산정 방법론 (실무)</li>
-            <li><b>사이버보안</b> — 전공, 동아리 3년, 학부연구생</li>
-            <li><b>AI 신뢰성</b> — 환각·도구 호출 실패 유형화</li>
-          </ul>
-        </div>
-        <div class="skill">
-          <h3>자격 · 어학</h3>
-          <ul>
-            <li><b>TOEIC Speaking</b> AL (160)</li>
-            <li><b>JLPT</b> N2</li>
+            <li><b>TOEIC Speaking</b> AL (160) · <b>JLPT</b> N2</li>
             <li>정보보안기사 — 필기 합격, 실기 준비 중</li>
-          </ul>
-        </div>
-        <div class="skill">
-          <h3>기록 · 공유</h3>
-          <ul>
-            <li><b>CTF 출제</b> — 문제 2건 + 풀이 문서</li>
-            <li><b>커리큘럼 제작</b> — 학습 자료 100여 개 선별, 직접 강의</li>
-            <li><b>사내 도구</b> — 회의록 자동 정리 페이지를 만들어 전사 공유</li>
-            <li><b>기술 블로그</b> — velog, Notion WORK 로그</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- ---------- CLOSING ---------- -->
+    <!-- ---------- 마무리 ---------- -->
     <section class="closing rise">
       <blockquote>&ldquo;방어가 견고해 공격이 통하지 않는 경우도, 그 영역의 방어 수준을 확인한 결과로 남긴다.&rdquo;</blockquote>
       <cite>— 직접 세운 테스트 원칙 중 7번. 실패도 결과로 남긴다는 생각은 여기서 왔습니다.</cite>
 
       <div class="links">
+        <a href="mailto:vina1601@ewhain.net"><i>&rarr;</i> vina1601@ewhain.net</a>
         <a href="https://github.com/hyunbin1601" target="_blank" rel="noopener"><i>&rarr;</i> GitHub</a>
         <a href="https://velog.io/@vina1601/posts" target="_blank" rel="noopener"><i>&rarr;</i> velog</a>
         <a href="https://sumptuous-athlete-4c9.notion.site/PROJECT-4942b824dd864b5bbafffa431f8023dc" target="_blank" rel="noopener"><i>&rarr;</i> 프로젝트 상세</a>
-        <a href="https://sumptuous-athlete-4c9.notion.site/WORK-12a0a5d1261f4ccebcb7412ba7735274" target="_blank" rel="noopener"><i>&rarr;</i> 작업 로그</a>
         <a href="https://drive.google.com/drive/folders/1aguBdoLsxY6Ams8DeQYtW-bs2vOIuVQV" target="_blank" rel="noopener"><i>&rarr;</i> 활동 자료</a>
-        <a href="mailto:vina1601@ewhain.net"><i>&rarr;</i> vina1601@ewhain.net</a>
       </div>
 
       <footer>임현빈 &middot; Lim HyunBin &middot; 2026</footer>
@@ -971,16 +827,34 @@ footer {
 
 <script>
 (function () {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    document.querySelectorAll(".rise").forEach(function (el) { el.classList.add("in"); });
-    return;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* 스크롤 진입 시 섹션 등장 */
+  var rises = document.querySelectorAll(".rise");
+  if (reduce) {
+    rises.forEach(function (el) { el.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.06 });
+    rises.forEach(function (el) { io.observe(el); });
   }
-  var io = new IntersectionObserver(function (entries) {
+
+  /* 현재 보고 있는 섹션을 내비게이션에 표시 */
+  var links = Array.prototype.slice.call(document.querySelectorAll(".nav a"));
+  var targets = links.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+  var spy = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
-      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      if (!e.isIntersecting) return;
+      var i = targets.indexOf(e.target);
+      if (i < 0) return;
+      links.forEach(function (a) { a.classList.remove("active"); });
+      links[i].classList.add("active");
     });
-  }, { rootMargin: "0px 0px -12% 0px", threshold: 0.06 });
-  document.querySelectorAll(".rise").forEach(function (el) { io.observe(el); });
+  }, { rootMargin: "-20% 0px -70% 0px", threshold: 0 });
+  targets.forEach(function (t) { if (t) spy.observe(t); });
 })();
 </script>
 </body>
