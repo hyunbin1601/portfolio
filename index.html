@@ -543,8 +543,8 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
       <div class="metrics">
         <div class="metric">
           <span class="lab">만든 프로젝트</span>
-          <span class="val">13<span class="unit">건</span></span>
-          <span class="den">실무 6건 · 팀 프로젝트 7건<br>2023 &ndash; 2026</span>
+          <span class="val">12<span class="unit">건</span></span>
+          <span class="den">실무 5건 · 팀 프로젝트 7건<br>2023 &ndash; 2026</span>
         </div>
         <div class="metric">
           <span class="lab">실무 경력</span>
@@ -601,7 +601,7 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
           <p class="sub">Engineering</p>
           <p class="def">웹 화면과 API 서버를 만들어 배포하고, 외부 도구를 연동했습니다.</p>
           <ul>
-            <li>고객 채널 <b>PASS 본인인증 · 회원가입 · 로그인</b> 구현</li>
+            <li>고객 채널의 <b>PASS 인증 · 회원가입 · 로그인 · 신청서 제출</b>을 백엔드에서 구현, 토큰 관리와 무결성 인증 절차 조사</li>
             <li>React · TypeScript 서비스 <b>4건</b> — mo-gether · Verifit · New:ON · PIOLINK(외주 납품)</li>
             <li>Python · Flask · FastAPI · Docker · Neo4j · Kafka · <b>외부 도구 연동</b></li>
           </ul>
@@ -614,7 +614,6 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
           <ul>
             <li>인턴 때 낸 <b>첫 기획안이 채택되어</b> 카본 AI 프로젝트가 착수되고 정규직으로 전환</li>
             <li><b>사내 솔루션 넷지에 카본 AI를 붙이자고 제안</b> — AI가 배출량 계산·데이터 조회를 직접 호출하는 관리자 대시보드 기능이 됨</li>
-            <li><b>범용 데이터 수집 레이어(후시 커넥터) 설계</b> — 어댑터 6종의 난이도와 보유 현황을 따져 P0~P3 우선순위와 단계별 로드맵 작성</li>
             <li>공모전 PM(3인) · 해커톤 PM(3인) · mo-gether 기획(2인) — <b>요건 정의부터 일정·발표까지</b></li>
           </ul>
         </div>
@@ -696,30 +695,26 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
 
         <article class="proj">
           <div>
-            <h3>후시 커넥터 — 범용 데이터 수집·연결 레이어 설계</h3>
-            <p class="meta">2026 &nbsp;/&nbsp; (주)후시파트너스 &nbsp;/&nbsp; 설계 담당</p>
-            <div class="doms"><span class="dom plan">기획·PM</span><span class="dom ai">AI</span></div>
-            <p>탄소 배출량과 감축량 계산은 회사가 이미 잘하는 영역이었습니다. <b>실제 병목은 계산이 아니라 입력 데이터 확보였습니다.</b> 고객사마다 시스템과 파일 포맷, 연동 역량이 전부 달라 매번 연계 프로그램을 새로 만들어야 했고, 소규모 계약에 개발자를 한 달 투입하는 방식은 유지될 수 없었습니다.</p>
-            <p>고객이 우리 포맷에 맞추는 대신 <b>우리가 고객 환경에서 데이터를 가져오는 구조</b>로 설계했습니다. API·DB·엑셀·화면·이미지·IoT를 어댑터 6종으로 받아 Apache NiFi 백본으로 모으고, 표준 스키마로 정규화한 뒤 계산 엔진으로 넘깁니다. 어댑터별로 연결 방식과 난이도, 현재 보유 여부를 따져 <b>P0~P3 우선순위</b>를 매겼고, 이미 동작하는 정부포털 크롤러와 OCR을 공통 어댑터로 다시 감싸는 것을 1순위로 뒀습니다.</p>
+            <h3>CJ대한통운 탄소배출권 신청 페이지</h3>
+            <p class="meta">2026 &nbsp;/&nbsp; (주)후시파트너스 &nbsp;/&nbsp; 백엔드</p>
+            <div class="doms"><span class="dom dev">개발</span><span class="dom sec">정보보안</span></div>
+            <p><b>로그인과 회원가입, 참여신청서 제출</b> 기능을 만들었습니다. PASS 인증으로 로그인과 회원가입을 처리하고, 참여신청서 제출과 로그인 과정에서 <b>토큰을 관리</b>했습니다.</p>
+            <p>참여신청서와 본인인증 구간은 <b>누가 언제 무엇에 동의했는지를 나중에도 증명할 수 있어야</b> 하는 곳입니다. 그래서 <b>TSA(타임스탬프)와 전자서명, 무결성 입증에 쓰이는 인증 절차</b>를 조사해 설계에 반영하려 했습니다.</p>
           </div>
           <div class="side">
-            <dl>
-              <div><dt>설계 범위</dt><dd>어댑터 6종<small>Crawler · OCR · File · DB · API/MCP · IoT</small></dd></div>
-              <div><dt>산출물</dt><dd>P0~P3 · Phase 0~4<small>우선순위 산정과 단계별 로드맵</small></dd></div>
-            </dl>
+            <dl><div><dt>담당 기능</dt><dd>인증 · 가입 · 신청서<small>PASS 연동, 토큰 관리, 무결성 검토</small></dd></div></dl>
           </div>
         </article>
 
         <article class="proj">
           <div>
-            <h3>고객 채널 인증 — 신청 페이지 본인인증 · 가입</h3>
-            <p class="meta">2026 &nbsp;/&nbsp; 외부 사업 프로젝트 &nbsp;/&nbsp; 서비스 개발</p>
+            <h3>제주도 히트펌프 크레딧 신청 페이지</h3>
+            <p class="meta">2026 &nbsp;/&nbsp; (주)후시파트너스 &nbsp;/&nbsp; 백엔드</p>
             <div class="doms"><span class="dom dev">개발</span></div>
-            <p>고객사 배출권 신청 페이지에서 <b>PASS 본인인증과 회원가입, 로그인</b>을 담당했습니다. 인증이 중단됐을 때 처음부터 다시 하지 않도록 흐름을 복구하는 것과, 이미 가입한 사용자의 중복 판별, 필요한 항목만 받는 것을 중심으로 봤습니다.</p>
-            <p><b>제주도 히트펌프 배출권 신청 페이지</b>는 신청 대상을 민간 개인에서 <b>제조사로 전환</b>하는 작업이었습니다. 개인 기준으로 짜여 있던 흐름을 제조사 기준으로 바꾸기 위해 필요한 입력 항목과 서류, 검증 요소를 다시 정리하고, 설비 정보와 감축량 산정 근거를 입력하는 순서와 화면을 설계해 퍼블리싱했습니다.</p>
+            <p>제주도에 설치된 히트펌프 설비의 탄소 감축량을 신청·관리하는 페이지입니다. 기존에는 민간 개인이 신청 대상이었는데, 신청 규모가 더 큰 <b>제조사별 신청으로 전환</b>하는 작업이었습니다. 백엔드 파트를 맡아 기획자와 프론트엔드 개발자와 협업해 개발했습니다.</p>
           </div>
           <div class="side">
-            <dl><div><dt>담당 구간</dt><dd>인증 · 가입 · 로그인<small>개인정보를 받는 순간이자 이탈이 가장 많은 구간</small></dd></div></dl>
+            <dl><div><dt>맡은 범위</dt><dd>백엔드<small>기획자 · 프론트엔드 개발자와 협업</small></dd></div></dl>
           </div>
         </article>
 
