@@ -126,6 +126,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .rail .pill { height: 5px; width: 100%; background: var(--grad); border-radius: 999px; margin: var(--s4) 0; }
 .rail .role { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 var(--s5); }
 .rail .role b { color: var(--ink); font-weight: 600; }
+.rail .role .role-gap { display: block; height: 6px; }
 
 .nav { display: flex; flex-direction: column; gap: 1px; margin-bottom: var(--s5); }
 .nav a {
@@ -502,9 +503,13 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
       <h1 class="mark">임현빈<span class="mark-en">Im Hyun Been</span></h1>
       <div class="pill"></div>
       <p class="role">
-        <b>AI · 플랫폼 개발</b><br>
+        <b>개발 &times; 정보보안</b><br>
+        AI 서비스와 플랫폼을 만들고,<br>
+        개인정보와 접근 권한을 지킵니다<br>
+        <span class="role-gap"></span>
         現 (주)후시파트너스 AI랩실 선임매니저<br>
-        이화여자대학교 사이버보안학과 졸업
+        이화여자대학교 사이버보안학과 졸업<br>
+        정보보안기사 &middot; 빅데이터분석기사 필기 합격
       </p>
     </div>
 
@@ -530,9 +535,9 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
       <p class="eyebrow">Portfolio &middot; 2026</p>
       <h2 class="thesis"><em>기획하고</em>, <em>만들고</em>, <em>평가하고</em>, <em>지킵니다</em>.</h2>
       <p class="deck">
-        보안에서 시작해 개발로, 개발에서 AI로 옮겨 왔고, 실무에서는 기획까지 맡았습니다.
+        사이버보안을 전공하고 개발과 AI로 영역을 넓혔습니다.
         지금은 규제 도메인의 AI 서비스를 <b>1인 PM 겸 개발자</b>로 맡아 기획부터 검증까지 하고,
-        이미 운영 중인 사내 솔루션을 이어받아 고치고 있습니다.
+        개발하면서 <b>본인인증, 개인정보 암호화, 서비스 권한 설계</b>처럼 지키는 부분도 직접 챙깁니다.
       </p>
 
       <div class="hero-cta">
@@ -549,13 +554,13 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
         </div>
         <div class="metric">
           <span class="lab">실무 경력</span>
-          <span class="val">8<span class="unit">개월</span></span>
+          <span class="val">10<span class="unit">개월</span></span>
           <span class="den">인턴 3개월 → 정규직 전환<br>재직 중</span>
         </div>
         <div class="metric">
           <span class="lab">이수 교육</span>
           <span class="val">540<span class="unit">시간</span></span>
-          <span class="den">보안 개발자 부트캠프 외<br>수료 3건</span>
+          <span class="den">보안 개발자 부트캠프 외<br>수료 4건</span>
         </div>
         <div class="metric">
           <span class="lab">대외 활동</span>
@@ -583,17 +588,19 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
             <li>규제 도메인 AI 서비스를 <b>1인 PM 겸 개발자</b>로 기획부터 검증까지</li>
             <li>RAG 파이프라인 설계 · <b>평가셋을 직접 만들어 품질을 수치로 관리</b></li>
             <li>사내 기능을 <b>MCP 서버</b>로 노출해 에이전트가 직접 호출하도록 연동</li>
+            <li>학부연구생으로 <b>적대적 공격(DeepFool)</b> 연구 · SK AX <b>생성형 AI 서비스 개발 실무</b> 교육 수료</li>
           </ul>
         </div>
 
         <div class="verb">
           <h3>정보보안</h3>
           <p class="sub">Security</p>
-          <p class="def">이화여자대학교 사이버보안학과 전공. 실제 서비스의 취약점을 찾아 신고했습니다.</p>
+          <p class="def">사이버보안학과 전공. 실제 서비스의 취약점을 찾아 신고했고, 실무에서는 개인정보와 접근 권한을 직접 다룹니다.</p>
           <ul>
-            <li><b>취약점 제보 2건</b> — 내부정보 노출, 평문 개인정보 노출 · KISA 제보 · <b>KVE 수령</b></li>
-            <li>사이버보안학과 · 교내 보안학술동아리 <b>회장·부회장 3년</b> · CTF 웹·포렌식 출제</li>
-            <li>MITRE ATT&amp;CK 악성 행위 분류 · 개인정보 자동 탐지·마스킹 · 클라우드보안 이수</li>
+            <li><b>취약점 제보 2건</b> — 내부정보 노출, 평문 개인정보 노출 · KISA 제보 · 평문 개인정보 건 <b>KVE 발급 · 포상금</b></li>
+            <li>실무에서 본인인증 <b>CI/DI · 개인정보 암호화/해시 · 암호화 키</b> 관리, 3역할 권한 분리와 <b>조회 범위 서버 강제</b> 설계</li>
+            <li>보안학술동아리 <b>회장·부회장 3년</b> · <b>ECS CTF 출제위원</b>(웹·포렌식) · <b>WISET 정보보안 멘토링 대표멘티</b></li>
+            <li><b>정보보안기사 필기 합격</b>(실기 준비 중) · 클라우드보안 교육 수료 · MITRE ATT&amp;CK 악성 행위 분류</li>
           </ul>
         </div>
 
@@ -616,6 +623,7 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
             <li>인턴 때 낸 <b>첫 기획안이 채택되어</b> 카본 AI 프로젝트가 착수되고 정규직으로 전환</li>
             <li><b>사내 솔루션 넷지에 카본 AI를 붙이자고 제안</b> — AI가 배출량 계산·데이터 조회를 직접 호출하는 관리자 대시보드 기능이 됨</li>
             <li>공모전 PM(3인) · 해커톤 PM(3인) · mo-gether 기획(2인) — <b>요건 정의부터 일정·발표까지</b></li>
+            <li><b>사회봉사실천리더 팀장</b> — 봉사 라디오 · 유기동물 후원 굿즈 기획과 운영</li>
           </ul>
         </div>
       </div>
@@ -868,11 +876,13 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
             <tr><th>소속 · 활동</th><th>기간</th><th>역할</th><th>한 줄</th></tr>
           </thead>
           <tbody>
-            <tr><td>(주)후시파트너스</td><td class="when">2026.03&ndash;현재</td><td>선임매니저 · AI랩실</td><td>카본 AI 총괄 개발, 넷지 고도화, 외부 사업 프로젝트</td></tr>
+            <tr><td>(주)후시파트너스</td><td class="when">2026.03&ndash;현재</td><td>선임매니저 · AI랩실</td><td>카본 AI 기획 · 개발, 넷지 고도화, 고객사 본인인증과 개인정보 암호화</td></tr>
             <tr><td>(주)후시파트너스</td><td class="when">2025.12&ndash;2026.02</td><td>인턴</td><td>AI 기술 동향 사내 발표, 카본 AI 첫 기획안 제안 → 정규직 전환</td></tr>
+            <tr><td>SK AX 생성형 AI 서비스 개발 실무</td><td class="when">2026.09.21&ndash;09.23</td><td>수료</td><td>생성형 AI를 활용한 서비스 개발 실무 교육</td></tr>
             <tr><td>KISIA S-개발자 3기</td><td class="when">2025.03&ndash;2025.12</td><td>수료</td><td>보안 개발자 부트캠프 540시간 → ShiftX TDR 프로젝트</td></tr>
             <tr><td>클라우드보안</td><td class="when">2024.12</td><td>수료</td><td>한국정보보호산업협회. 접근 통제와 데이터 보호 요건</td></tr>
-            <tr><td>EVI$ION</td><td class="when">2022.09&ndash;2025.08</td><td>회장 · 부회장</td><td>자료 100여 개로 커리큘럼 신설·직접 강의. 신입 잔존 20명 중 15명 (이전 기수 11명)</td></tr>
+            <tr><td>EVI$ION</td><td class="when">2022.09&ndash;2025.08</td><td>회장 · 부회장</td><td>자료 100여 개로 커리큘럼 신설·직접 강의. 신입 22명 중 15명 잔류 (이전 기수 18명 중 11명)</td></tr>
+            <tr><td>KISA 취약점 제보</td><td class="when">2024.09&ndash;2024.12</td><td>개인 연구</td><td>실서비스 2곳 제보, 평문 개인정보 노출 건 KVE 발급 · 포상금</td></tr>
             <tr><td>WISET 정보보안 멘토링</td><td class="when">2024.05&ndash;2024.11</td><td>대표멘티</td><td>멘티 의견 취합·건의, 멘토 일정 조율</td></tr>
             <tr><td>ECS CTF</td><td class="when">2023.12&ndash;2024.02</td><td>출제위원 · 운영진</td><td>웹 · 포렌식 2문제 출제, 풀이 문서 작성</td></tr>
             <tr><td>이화여대 사이버보안학과 연구실</td><td class="when">2023.03&ndash;2023.12</td><td>학부연구생</td><td>적대적 공격 연구. DeepFool 직접 구현해 모델별 비교</td></tr>
@@ -914,6 +924,7 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
           <ul>
             <li><b>웹 취약점</b> — OWASP Top 10, Burp Suite</li>
             <li><b>MITRE ATT&amp;CK</b> · 악성 행위 분류 · PCAP 포렌식</li>
+            <li><b>개인정보 보호</b> — CI/DI · 암호화/해시 · 키 관리, 권한 분리 · 접근 통제</li>
             <li><b>개인정보 비식별화</b> · 적대적 공격(DeepFool)</li>
           </ul>
         </div>
@@ -921,6 +932,7 @@ footer { margin-top: var(--s6); font-family: var(--mono); font-size: 10.5px; col
           <h3>도메인 · 자격 · 어학</h3>
           <ul>
             <li><b>탄소배출권</b> — K-ETS, MRV, 산정 방법론 (실무)</li>
+            <li><b>정보보안기사</b> · <b>빅데이터분석기사</b> 필기 합격 (실기 준비 중)</li>
             <li><b>TOEIC Speaking</b> AL (160) · <b>JLPT</b> N2</li>
           </ul>
         </div>
